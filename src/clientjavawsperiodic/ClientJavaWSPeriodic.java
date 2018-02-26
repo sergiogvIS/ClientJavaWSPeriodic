@@ -14,6 +14,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.Root;
 
 /**
  *
@@ -23,43 +24,46 @@ public class ClientJavaWSPeriodic {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
+    
     public static void main(String[] args) throws IOException, Exception {
-        // TODO code application logic here
-        System.out.println("¿Qué desea hacer?");
-        System.out.println("1. Obtener todos los elementos");
-        System.out.println("2. Obtener simbolo de elemento");
-        System.out.println("3. Obtener peso atómico");
-        System.out.println("4. Obtener número atómico");
-        Scanner sc = new Scanner(System.in);
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int a = sc.nextInt();
+        while(true){
+            // TODO code application logic here
+            System.out.println("¿Qué desea hacer?");
+            System.out.println("1. Obtener todos los elementos");
+            System.out.println("2. Obtener simbolo de elemento");
+            System.out.println("3. Obtener peso atómico");
+            System.out.println("4. Obtener número atómico");
+            System.out.println("5. Salir");
+            Scanner sc = new Scanner(System.in);
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            int a = sc.nextInt();
+            ejecuta(a); 
+        }
+    }
+    
+    public static void ejecuta(int a) throws Exception{
         switch (a){
             case 1:
-                System.out.println(getAtoms());
+                obtenElem();
                 break;
             case 2:
-                System.out.println("Introduzca el elemento");
-                String b = br.readLine();
-                Serializer serializer = new Persister();
-                Elemento elemento = new Elemento();
-                serializer.read(elemento, getElementSymbol(b));
-                System.out.println(elemento.getSymbol());
-                System.out.println(getElementSymbol(b));
+                muestraSimb();
                 break;
             case 3:
-                System.out.println("Introduzca el elemento");
-                b = br.readLine();
-                System.out.println(getAtomicWeight(b));
+                muestraPesA();
                 break;
             case 4:
-                System.out.println("Introduzca el elemento");
-                b = br.readLine();
-                System.out.println(getAtomicNumber(b));                
+                muestraNumA();
                 break;
+            case 5:
+                System.exit(0);
             default:
-                break;          
-        }        
+                break; 
+
+        }
+    
     }
 
     private static String getAtoms() {
@@ -67,59 +71,54 @@ public class ClientJavaWSPeriodic {
         net.webservicex.PeriodictableSoap port = service.getPeriodictableSoap();
         return port.getAtoms();
     }
-
-    private static String getElementSymbol(java.lang.String elementName) {
-        net.webservicex.Periodictable service = new net.webservicex.Periodictable();
-        net.webservicex.PeriodictableSoap port = service.getPeriodictableSoap();
-        return port.getElementSymbol(elementName);
-    }
-
-    private static String getAtomicWeight(java.lang.String elementName) {
-        net.webservicex.Periodictable service = new net.webservicex.Periodictable();
-        net.webservicex.PeriodictableSoap port = service.getPeriodictableSoap();
-        return port.getAtomicWeight(elementName);
-    }
-
+    
     private static String getAtomicNumber(java.lang.String elementName) {
         net.webservicex.Periodictable service = new net.webservicex.Periodictable();
         net.webservicex.PeriodictableSoap port = service.getPeriodictableSoap();
         return port.getAtomicNumber(elementName);
     }
-    public static class Elemento {
-        @Element
-        private String Table;
-        @Element
-        private String AtomicNumber;
-        @Element
-        private String Symbol;
-        @Element
-        private String ElementName;
-        
-        public Elemento(){
-            super();
-        }
-        public Elemento(String table, String atomicNumber, String symbol, String elementName) {
-            this.Table = table;
-            this.AtomicNumber= atomicNumber;
-            this.Symbol= symbol;
-            this.ElementName= elementName;
-        }
-
-        public String getSymbol() {
-            return Table;
-        }
-
-        public String getTable() {
-            return Table;
-        }
-
-        public String getAtomicNumber() {
-            return AtomicNumber;
-        }
-
-        public String getElementName() {
-            return ElementName;
-        }       
-    }
     
+    private static void muestraNumA() throws IOException, Exception{
+        System.out.println("Introduzca el elemento");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String b = br.readLine();
+        Serializer serializer = new Persister();
+        String source = getAtomicNumber(b);
+        DataSet dataset = new DataSet();
+        serializer.read(dataset, source);
+        String res = dataset.getTable().getAtomicNumber();
+        System.out.println("El número atómico de " + b + " es: "+ res);
+    
+    }
+    private static void muestraPesA() throws IOException, Exception{
+        System.out.println("Introduzca el elemento");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String b = br.readLine();
+        Serializer serializer = new Persister();
+        String source = getAtomicNumber(b);
+        DataSet dataset = new DataSet();
+        serializer.read(dataset, source);
+        String res = dataset.getTable().getAtomicWeight();
+        System.out.println("El peso atómico de " + b + " es: "+ res);
+    }
+    private static void muestraSimb() throws IOException, Exception{
+        System.out.println("Introduzca el elemento");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String b = br.readLine();
+        Serializer serializer = new Persister();
+        String source = getAtomicNumber(b);
+        DataSet dataset = new DataSet();
+        serializer.read(dataset, source);
+        String res = dataset.getTable().getSymbol();
+        System.out.println("El simbolo de " + b + " es: "+ res);
+    }
+    private static void obtenElem(){
+        System.out.println(getAtoms());
+        /*serializer = new Persister();
+        source = getAtoms();
+        dataset = new DataSet();
+        serializer.read(dataset, source);
+        res = dataset.getTable().getElementName();
+        System.out.println( res);*/
+    }
 }
