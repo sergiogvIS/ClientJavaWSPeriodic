@@ -35,7 +35,8 @@ public class ClientJavaWSPeriodic {
             System.out.println("2. Obtener simbolo de elemento");
             System.out.println("3. Obtener peso atómico");
             System.out.println("4. Obtener número atómico");
-            System.out.println("5. Salir");
+            System.out.println("5. Obtener todos los datos de un elemento");
+            System.out.println("6. Salir");
             Scanner sc = new Scanner(System.in);
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             int a = sc.nextInt();
@@ -58,6 +59,9 @@ public class ClientJavaWSPeriodic {
                 muestraNumA();
                 break;
             case 5:
+                muestraTodo();
+                break;
+            case 6:
                 System.exit(0);
             default:
                 break; 
@@ -120,5 +124,25 @@ public class ClientJavaWSPeriodic {
         serializer.read(dataset, source);
         res = dataset.getTable().getElementName();
         System.out.println( res);*/
+    }
+    private static void muestraTodo() throws IOException, Exception{
+        System.out.println("Introduzca el elemento");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String b = br.readLine();
+        Serializer serializer = new Persister();
+        String source = getAtomicNumber(b);
+        DataSet dataset = new DataSet();
+        serializer.read(dataset, source);
+        System.out.println("Número atómico: " + dataset.getTable().getAtomicNumber());
+        System.out.println("Nombre: " + dataset.getTable().getElementName());
+        System.out.println("Símbolo: " + dataset.getTable().getSymbol());
+        System.out.println("Peso atómico: " + dataset.getTable().getAtomicWeight());
+        System.out.println("Punto de evaporación: " + dataset.getTable().getBoilingPoint());
+        System.out.println("Potencial de ionización: " + dataset.getTable().getIonisationPotential());
+        System.out.println("Electronegatividad: " + dataset.getTable().getEletroNegativity());
+        System.out.println("Radio atómico: " + dataset.getTable().getAtomicRadius());
+        System.out.println("Punto de fusión: " + dataset.getTable().getMeltingPoint());
+        System.out.println("Densidad: " + dataset.getTable().getDensity());
+    
     }
 }
